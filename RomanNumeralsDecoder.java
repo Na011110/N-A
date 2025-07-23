@@ -1,39 +1,52 @@
-import java.util.HashMap; 
-import java.util.Scanner;  
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class RomanNumeralsDecoder {
-    
+
+    private static final Map<Character, Integer> romanNumberMap = new HashMap<>();
+
+    static {
+        romanNumberMap.put('I', 1);
+        romanNumberMap.put('V', 5);
+        romanNumberMap.put('X', 10);
+        romanNumberMap.put('L', 50);
+        romanNumberMap.put('C', 100);
+        romanNumberMap.put('D', 500);
+        romanNumberMap.put('M', 1000);
+    }
+
     public static void main(String[] args) {
-    
-    Scanner sc = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        String inputString = scanner.nextLine().toUpperCase().trim();
 
-    HashMap<String, Integer> romanNumberMap = new HashMap<>();
-
-    romanNumberMap.put("I",1);
-    romanNumberMap.put("V",5);
-    romanNumberMap.put("X",10);
-    romanNumberMap.put("L",50);
-    romanNumberMap.put("C",100);
-    romanNumberMap.put("D",500);
-    romanNumberMap.put("M",1000);
-
-    String input = sc.nextLine();
-    
-    int sum =0;
-    
-    for (int i = 0; i < input.length(); i++) {
-            String currentChar=input.charAt(i)+"";
-            int CurrentNumber = romanNumberMap.get(currentChar);
-     
-            if( i!= input.length() -1 && CurrentNumber < romanNumberMap.get(input.charAt(i+1)+""))
-            {
-                sum -= CurrentNumber;
-            }
-           else{
-            sum += CurrentNumber;
-           }
-        
+        if (!isValidRoman(inputString)) {
+            System.out.println("Invalid Roman numeral input.");
+            return;
         }
-          System.out.println(sum);
+
+        int result = 0;
+
+        for (int i = 0; i < inputString.length(); i++) {
+            int current = romanNumberMap.get(inputString.charAt(i));
+            int next = (i < inputString.length() - 1) ? romanNumberMap.get(inputString.charAt(i + 1)) : 0;
+
+            if (current < next) {
+                result -= current;
+            } else {
+                result += current;
+            }
+        }
+
+        System.out.println(result);
+    }
+
+    private static boolean isValidRoman(String s) {
+        for (char c : s.toCharArray()) {
+            if (!romanNumberMap.containsKey(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
